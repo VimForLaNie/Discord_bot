@@ -4,6 +4,17 @@ const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
 const botCommands = require('./commands');
 
+//connect to DB
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/partylist?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect((err,db) => {
+  if(err) throw err;
+  console.info(`Connected to DB!!`);
+});
+
+
+//map all functions to bot command
 Object.keys(botCommands).map(key => {
   bot.commands.set(botCommands[key].name, botCommands[key]);
 });

@@ -1,9 +1,13 @@
+//get all the lib and const and package and everything
 require('dotenv').config();
 const Discord = require('discord.js');
-const bot = new Discord.Client();
-bot.commands = new Discord.Collection();
 const { PREFIX } = require('./config.json');
 const botCommands = require('./commands');
+
+//important global var
+const bot = new Discord.Client();
+bot.commands = new Discord.Collection();
+const TOKEN = process.env.TOKEN;
 
 //connect to DB
 const MongoClient = require('mongodb').MongoClient;
@@ -14,13 +18,10 @@ client.connect((err,db) => {
   console.info(`Connected to DB!!`);
 });
 
-
 //map all functions to bot command
 Object.keys(botCommands).map(key => {
   bot.commands.set(botCommands[key].name, botCommands[key]);
 });
-
-const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
 
@@ -30,6 +31,7 @@ bot.on('ready', () => {
   console.info(`======================================= \n \n`);
 });
 
+//message event
 bot.on('message', msg => {
   //ignore self message
   if(msg.author.bot) return;
@@ -37,42 +39,43 @@ bot.on('message', msg => {
   //check if prefix exit
   if(!msg.content.toString().startsWith(PREFIX)) { console.info(`----------------- </ on message event > ---no--prefix---------`); return;}
   console.info(`msg author: ${msg.author.tag}`);
-  //args -> command | command -> text after args
+  //command -> command | args -> text after command
   const args = msg.content.split(/ +/);
-  const command = args.shift().toLowerCase().substring(1); //.shift() for removing the command part of the msg
+  const command = args.shift().toLowerCase().substring(1); //.shift() for removing the command part of the msg | substr for remove prefix 
   console.info(`Called command: ${command} `);
 
-  if (!bot.commands.has(command)) {
+  if (!bot.commands.has(command)) { //if bot doesn't have command
     console.info(`can't find command : ${command}`);
     console.info(`----------------- </ on message event > ----no-command-------- \n`);
     return;
   } 
 
-  try {
-    console.info(`try to find ${command} function to exec`); //find command in commands/index.js and exec it
+  try { //find command in commands/index.js and exec it
     bot.commands.get(command).execute(msg, args,bot);
   } catch (error) {
     console.error(error);
-    msg.reply('there was an error trying to execute that command!');
+    msg.reply('there was an error trying to execute that command!'); //output debug
   }
   console.info(`----------------- </ on message event > ----------err------- \n`);
 });
 
+//add reaction event
 bot.on('messageReactionAdd', (re,user) => {
   console.info(`----------------- < on messageReactionAdd event > -------------------`);
 
+  //ignore bot's reaction
   if(re.users.bot) return;
-
+  //temporary hard-code command | will be based on emoji later
   const command = 'join';
   console.info(`command : ${command}`);
 
-  if (!bot.commands.has(command)) {
+  if (!bot.commands.has(command)) { //if bot doesn't have command
     console.info(`can't find command : ${command}`);
     console.info(`----------------- </ on messageReactionAdd event > -------no-command----------- \n`);
     return;
   } 
 
-  try {
+  try { //try to find the command and exec it
     bot.commands.get(command).execute(re,user);
   } catch (error) {
     console.error(error);

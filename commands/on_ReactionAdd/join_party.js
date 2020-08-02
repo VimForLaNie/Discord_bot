@@ -6,26 +6,23 @@ module.exports = {
     name: 'join',
     description: 'join a party',
     execute(re, user) {
-      const party_id = re.message.toString().split(" ");
-      console.info(`msg -> str ${party_id[4]}`);
-      const query_item = { id : party_id[4].toString() };
+      const party_id = re.message.toString().split(" "); //get party_id
+      const query_item = { id : party_id[4].toString() }; //search by id
       client.connect((err,db) => {
         if(err) throw err;
         var dbo = db.db("party");
         //insert party-obj
-        dbo.collection("partyList").find(query_item).toArray( (err,res) => {
+        dbo.collection("partyList").find(query_item).toArray( (err,res) => { 
             if(err) throw err;
             console.log(res);
-            if(user.id.toString() == res.leader.toString()) return;
+            if(user.id.toString() == res.leader.toString()) return; //if member == leader -> return
             var temp_obj = res[0].members;
-            temp_obj.push(user.id.toString());
-            console.log(temp_obj);
+            temp_obj.push(user.id.toString()); //create temp obj to be overwrite in member array
             var update_obj = { $set: {members : temp_obj} }
             dbo.collection("partyList").updateOne(query_item,update_obj, (err,res) => {
                 if(err) throw err;
             });
         });
       });
-
     },
   };

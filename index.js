@@ -44,7 +44,7 @@ bot.on('message', msg => {
   console.info(`Called command: ${command} `);
 
   if (!bot.commands.has(command)) {
-    console.info(`can't find command : ${command} \n`);
+    console.info(`can't find command : ${command}`);
     console.info(`----------------- </ on message event > ------------------- \n`);
     return;
   } 
@@ -64,8 +64,17 @@ bot.on('messageReactionAdd', (re,user) => {
 
   if(re.users.bot) return;
 
+  const command = 'join';
+  console.info(`command : ${command}`);
+
+  if (!bot.commands.has(command)) {
+    console.info(`can't find command : ${command}`);
+    console.info(`----------------- </ on messageReactionAdd event > ------------------- \n`);
+    return;
+  } 
+
   try {
-    bot.commands.get('add').execute(bot,re, user);
+    bot.commands.get(command).execute(re,user);
   } catch (error) {
     console.error(error);
   }

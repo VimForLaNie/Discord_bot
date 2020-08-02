@@ -1,2 +1,2 @@
 # Discord_bot
- python based discord bot
+ node.js based discord bot

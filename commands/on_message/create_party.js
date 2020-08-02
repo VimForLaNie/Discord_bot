@@ -5,7 +5,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true });
 
 
 module.exports = {
-    name: '!pcreate',
+    name: 'pcreate',
     description: 'create a new party',
     execute(msg, args) {
       const author = msg.author.id;

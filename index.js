@@ -2,6 +2,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
+const { PREFIX } = require('./config.json');
 const botCommands = require('./commands');
 
 //connect to DB
@@ -33,30 +34,28 @@ bot.on('message', msg => {
   //ignore self message
   if(msg.author.bot) return;
   console.info(`----------------- < on message event > -------------------`);
-  console.info(`msg author: ${msg.author.tag}`);
-
   //check if prefix exit
-  if(msg.toString().charAt(0) != '!') { console.info(`----------------- </ on message event > -------------------`); return;}
-
+  if(!msg.content.toString().startsWith(PREFIX)) { console.info(`----------------- </ on message event > ---no--prefix---------`); return;}
+  console.info(`msg author: ${msg.author.tag}`);
   //args -> command | command -> text after args
   const args = msg.content.split(/ +/);
-  const command = args.shift().toLowerCase(); //.shift() for removing the command part of the msg
+  const command = args.shift().toLowerCase().substring(1); //.shift() for removing the command part of the msg
   console.info(`Called command: ${command} `);
 
   if (!bot.commands.has(command)) {
     console.info(`can't find command : ${command}`);
-    console.info(`----------------- </ on message event > ------------------- \n`);
+    console.info(`----------------- </ on message event > ----no-command-------- \n`);
     return;
   } 
 
   try {
     console.info(`try to find ${command} function to exec`); //find command in commands/index.js and exec it
-    bot.commands.get(command).execute(msg, args);
+    bot.commands.get(command).execute(msg, args,bot);
   } catch (error) {
     console.error(error);
     msg.reply('there was an error trying to execute that command!');
   }
-  console.info(`----------------- </ on message event > ------------------- \n`);
+  console.info(`----------------- </ on message event > ----------err------- \n`);
 });
 
 bot.on('messageReactionAdd', (re,user) => {
@@ -69,7 +68,7 @@ bot.on('messageReactionAdd', (re,user) => {
 
   if (!bot.commands.has(command)) {
     console.info(`can't find command : ${command}`);
-    console.info(`----------------- </ on messageReactionAdd event > ------------------- \n`);
+    console.info(`----------------- </ on messageReactionAdd event > -------no-command----------- \n`);
     return;
   } 
 
@@ -78,5 +77,5 @@ bot.on('messageReactionAdd', (re,user) => {
   } catch (error) {
     console.error(error);
   }
-  console.info(`----------------- </ on messageReactionAdd event > -------------------\n `);
+  console.info(`----------------- </ on messageReactionAdd event > ------err------------\n `);
 });

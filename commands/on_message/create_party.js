@@ -1,4 +1,6 @@
 const { randomBytes } = require('crypto');
+const format = require('biguint-format');
+const PARTYEMBED = JSON.parse(process.env.PARTYEMBED);
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/partylist?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
@@ -9,9 +11,10 @@ module.exports = {
     execute(msg, args) {
       const author = msg.author.id;
       const party_name = args[1]; //!pcreate <num> <name>
-      //create party obj with 12-byte hex id
-      var rand_id = randomBytes(12).toString('Hex');
-      var party = { id : rand_id , Name : party_name ,leader : author, members : [] }; //member array for easy joining
+      //create party obj with 6-byte hex id
+      var rand_id_str = randomBytes(3).toString();
+      var rand_id_val = format(randomBytes(3),'dec');
+      var party = { id : rand_id_str , Name : party_name ,leader : author, members : [] }; //member array for easy joining
       client.connect((err,db) => {
         if(err) throw err;
         var dbo = db.db("party"); //db call party
@@ -21,9 +24,11 @@ module.exports = {
           console.info(`party inserted`);
         });
       });
+      PARTYEMBED.embed.title = party_name.toString();
+      PARTYEMBED.embed.color = rand_id_val;
       //output msg for joining via reaction button
-      msg.channel.send(`Party Id : ${rand_id} \n Game : ${party_name} \n`).then( msg => {
-        msg.react('🚪');
+      msg.channel.send(PARTYEMBED).then( em => {
+        em.react('🚪');
       });
     },
   };

@@ -10,13 +10,15 @@ bot.commands = new Discord.Collection();
 const TOKEN = process.env.TOKEN;
 
 //connect to DB
+
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/partylist?retryWrites=true&w=majority";
+const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/party?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect((err,db) => {
-  if(err) throw err;
-  console.info(`Connected to DB!!`);
+client.connect(err => {
+  console.error(err);
+  // perform actions on the collection object
 });
+
 
 //map all functions to bot command
 Object.keys(botCommands).map(key => {
@@ -56,7 +58,7 @@ bot.on('message', msg => {
     console.error(error);
     msg.reply('there was an error trying to execute that command!'); //output debug
   }
-  console.info(`----------------- </ on message event > ----------err------- \n`);
+  console.info(`----------------- </ on message event > ------------------- \n`);
 });
 
 //add reaction event
@@ -80,5 +82,5 @@ bot.on('messageReactionAdd', (re,user) => {
   } catch (error) {
     console.error(error);
   }
-  console.info(`----------------- </ on messageReactionAdd event > ------err------------\n `);
+  console.info(`----------------- </ on messageReactionAdd event > ---------------------\n `);
 });

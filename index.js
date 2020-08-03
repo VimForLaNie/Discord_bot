@@ -65,8 +65,8 @@ bot.on('messageReactionAdd', (re,user) => {
 
   //ignore bot's reaction
   if(re.users.bot) return;
-  //temporary hard-code command | will be based on emoji later
-  const command = 'join';
+  //command based on emoji and msg
+  const command = re.emoji.identifier;
   console.info(`command : ${command}`);
 
   if (!bot.commands.has(command)) { //if bot doesn't have command

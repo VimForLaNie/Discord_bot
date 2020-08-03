@@ -12,7 +12,7 @@ module.exports = {
       const author = msg.author.id;
       const party_name = args[1]; //!pcreate <num> <name>
       //create party obj with 6-byte hex id
-      var rand_id_str = randomBytes(3).toString();
+      var rand_id_str = randomBytes(3).toString('hex');
       var rand_id_val = format(randomBytes(3),'dec');
       var party = { id : rand_id_str , Name : party_name ,leader : author, members : [] }; //member array for easy joining
       client.connect((err,db) => {

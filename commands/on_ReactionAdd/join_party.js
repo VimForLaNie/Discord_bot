@@ -6,13 +6,13 @@ module.exports = {
     name: '%F0%9F%9A%AA',
     description: 'join a party',
     execute(re, user) {
-      const party_id = re.message.toString().split(" "); //get party_id
-      if(party_id[0] !== "Party" || party_id[1] !== "Id"){ return; }//scan for party message
-      const query_item = { id : party_id[3].toString() }; //search by id
+      if(re.message.content.split(" ").shift() != "Party") return;//if msg a party msg
+      const party_id = re.message.embed.color.toString('hex');
+      const query_item = { id : party_id }; //search by id
       client.connect((err,db) => {
         if(err) throw err;
         var dbo = db.db("party");
-        //ignore bot
+        //ignore bot's reaction
         if(re.message.author.id == user.id) return;
         //insert party-obj
         dbo.collection("partyList").find(query_item).toArray( (err,res) => { 

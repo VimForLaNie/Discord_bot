@@ -76,7 +76,7 @@ bot.on('messageReactionAdd', (re,user) => {
     console.info(`----------------- </ on messageReactionAdd event > -------no-command----------- \n`);
     return;
   } 
-
+  console.info(`Called command: ${command} `);
   try { //try to find the command and exec it
     bot.commands.get(command).execute(re,user);
   } catch (error) {

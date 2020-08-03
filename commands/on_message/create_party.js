@@ -3,7 +3,6 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/partylist?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
-
 module.exports = {
     name: 'pcreate',
     description: 'create a new party',
@@ -23,6 +22,8 @@ module.exports = {
         });
       });
       //output msg for joining via reaction button
-      msg.reply(`Party Id : ${rand_id} \n Game : ${party_name} \n`); //
+      msg.channel.send(`Party Id : ${rand_id} \n Game : ${party_name} \n`).then( msg => {
+        msg.react('🚪');
+      });
     },
   };

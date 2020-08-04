@@ -12,7 +12,7 @@ const TOKEN = process.env.TOKEN;
 //connect to DB
 
 const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://admin:admin@partylist.aorpn.gcp.mongodb.net/party?retryWrites=true&w=majority";
+const uri = process.env.URI;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
   console.error(err);

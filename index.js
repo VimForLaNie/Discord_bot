@@ -52,6 +52,8 @@ bot.on('message', msg => {
     return;
   } 
 
+  console.log(msg.author.avatarURL.toString());
+
   try { //find command in commands/index.js and exec it
     bot.commands.get(command).execute(msg, args,bot);
   } catch (error) {

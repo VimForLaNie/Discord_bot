@@ -45,6 +45,7 @@ bot.on('message', msg => {
   const args = msg.content.split(/ +/);
   const command = args.shift().toLowerCase().substring(1); //.shift() for removing the command part of the msg | substr for remove prefix 
   console.info(`Called command: ${command} `);
+  console.log(args);
 
   if (!bot.commands.has(command)) { //if bot doesn't have command
     console.info(`can't find command : ${command}`);
